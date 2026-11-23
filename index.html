@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#a3161c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Köln Markets">
+<title>Cologne Christmas Markets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: warm, practical pocket guide, used one-handed on a phone while walking between markets.
+   IDEA: a printed market day-ticket: red cover, gold date stamp, tear-off schedule, stall cards.
+   PICTURE: the cathedral market at night as the hero; a real photo on every card; real trail maps.
+   COLOUR and TYPE: Christmas red leads, pine green supports, gold accent. Fraunces titles, Inter body.
+   LAYOUT: mobile first. One column, thumb-sized buttons, sticky section pills; widens to two columns from 760px. */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#0d1b14);--ink:light-dark(#1d1a17,#f3eee6);--soft:light-dark(#5b5550,#bdb6aa);
+--red:light-dark(#a3161c,#d23a40);--pine:light-dark(#0f4d32,#4fb184);--gold:#e8b33f;
+--card:light-dark(#ffffff,#13261d);--line:light-dark(#eadfd3,#25402f);--tint:light-dark(#fbf1ef,#1a2e23);--gtint:light-dark(#eef6f1,#16301f)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:64px;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.1;text-wrap:balance;margin:0}
+h2{font-size:30px;color:var(--red);margin-bottom:6px}
+h3{font-size:20px}
+p{margin:.4em 0}
+a{color:var(--pine);font-weight:600}
+img{max-width:100%}
+.band{padding:28px 16px}
+.wrap{max-width:1040px;margin:0 auto}
+.lede{color:var(--soft);max-width:62ch}
+
+/* hero */
+.hero{position:relative;background:var(--red);color:#fff;overflow:hidden}
+.hero img{display:block;width:100%;height:240px;object-fit:cover;object-position:center 78%}
+.hero .txt{padding:18px 16px 22px;max-width:1040px;margin:0 auto}
+.hero h1{font-size:36px;color:#fff}
+.hero .sub{font-size:17px;color:#ffe3a3;margin-top:6px}
+.stamp{position:absolute;top:12px;right:12px;background:var(--gold);color:#3a2300;border-radius:50%;width:74px;height:74px;display:grid;place-items:center;text-align:center;font:700 11px/1.2 Inter,sans-serif;transform:rotate(-8deg);box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.stamp b{display:block;font:800 22px/1 Fraunces,serif}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.facts span{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:6px 12px;font-size:14px;white-space:nowrap}
+
+/* sticky section pills */
+nav.scroll{position:sticky;top:0;z-index:5;display:flex;gap:6px;overflow-x:auto;padding:8px 12px;background:var(--pine);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+nav.scroll::-webkit-scrollbar{display:none}
+nav.scroll a{flex:none;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.14);min-height:44px;display:flex;align-items:center}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.note{background:var(--tint);border-left:4px solid var(--red);padding:14px 16px;border-radius:8px;margin:14px 0}
+.note.g{background:var(--gtint);border-color:var(--pine)}
+.mapimg{display:block;width:100%;border-radius:12px;border:1px solid var(--line);margin-top:14px}
+.legend{font-size:14px;color:var(--soft);margin-top:6px}
+
+/* plan switch */
+.switch{display:flex;border:2px solid var(--red);border-radius:999px;overflow:hidden;margin:14px 0 4px}
+.switch button{flex:1;font:600 15px Inter,sans-serif;border:0;background:transparent;color:var(--red);padding:8px 10px;min-height:48px;cursor:pointer}
+.switch button[aria-pressed=true]{background:var(--red);color:#fff}
+
+/* schedule */
+ol.sched{list-style:none;margin:16px 0 0;padding:0}
+.sched li{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;padding:14px 0;border-top:1px dashed var(--line)}
+.sched .t{font:800 19px/1.1 Fraunces,serif;color:var(--red);white-space:nowrap}
+.sched .t small{display:block;font:600 12px Inter,sans-serif;color:var(--soft);margin-top:2px}
+.sched .move .t{color:var(--soft);font-size:16px}
+.sched h3{font-size:19px}
+.sched .move h3{font:600 15px Inter,sans-serif;color:var(--soft)}
+.sched .move a{display:inline-flex;align-items:center;min-height:44px}
+.done{display:inline-flex;align-items:center;gap:10px;font-size:15px;color:var(--soft);min-height:44px;cursor:pointer}
+.done input{width:22px;height:22px;accent-color:var(--pine)}
+li.ticked h3{text-decoration:line-through;opacity:.6}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 16px;border-radius:12px;background:var(--pine);color:#fff;text-decoration:none;font:600 15px Inter,sans-serif;border:0;cursor:pointer}
+.btn.alt{background:transparent;color:var(--pine);border:2px solid var(--pine)}
+
+/* cards */
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.card>img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;background:var(--line)}
+.card .in{padding:16px}
+.hrs{display:inline-block;background:var(--gold);color:#3a2300;font-weight:700;font-size:13px;border-radius:6px;padding:2px 8px;margin:6px 0}
+.tag{display:inline-block;background:var(--gtint);color:var(--pine);font-weight:700;font-size:13px;border-radius:6px;padding:2px 8px;margin:6px 0 0 4px}
+.card ul{margin:8px 0 0;padding-left:20px}.card li{margin:6px 0}
+.look{margin-top:10px;font-size:13px;font-weight:700;color:var(--red);text-transform:none}
+
+.dishes{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin-top:16px}
+.dish{display:grid;grid-template-columns:104px minmax(0,1fr);background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.dish img{width:104px;height:100%;min-height:112px;object-fit:cover;display:block}
+.dish .in{padding:10px 12px}
+.dish h3{font-size:18px}
+.dish.noimg{grid-template-columns:minmax(0,1fr)}
+.price{font-weight:700;color:var(--pine);white-space:nowrap}
+.where{font-size:14px;color:var(--soft)}
+.est{font-size:12px;font-weight:600;color:var(--soft)}
+
+.rows{margin-top:12px}
+.row{padding:12px 0;border-top:1px solid var(--line)}
+.row .top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px}
+.photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.photos figure{margin:0}.photos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;display:block}
+.photos figcaption{font-size:13px;margin-top:4px}
+
+.trail{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.trail img{display:block;width:100%;height:auto}
+.trail .in{padding:16px}
+.stats{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.stats span{background:var(--gtint);color:var(--pine);font-weight:700;font-size:13px;border-radius:999px;padding:4px 10px;white-space:nowrap}
+.fit{display:inline-block;background:var(--red);color:#fff;font-weight:700;font-size:12px;border-radius:6px;padding:2px 8px;margin-bottom:6px}
+.toast{min-height:20px;font-size:14px;color:var(--pine);margin-top:6px}
+
+.tips{display:grid;gap:12px;margin-top:14px}
+.tip{background:var(--gtint);border-radius:12px;padding:14px 16px}
+.tip b{color:var(--pine)}
+.tip .by{font-size:13px;color:var(--soft)}
+.red{background:var(--red);color:#fff}.red h2{color:#fff}.red .lede{color:#ffe3a3}
+.red .row{border-color:rgba(255,255,255,.25)}.red .price{color:#ffe3a3}.red .where{color:#fbe9e7}
+footer{font-size:13px;color:var(--soft)}
+footer li{margin:3px 0}
+
+/* larger screens */
+@media(min-width:760px){
+ .band{padding:48px max(5vw,24px)}
+ h2{font-size:40px}
+ .hero img{height:420px}
+ .hero .txt{padding:24px max(5vw,24px) 28px}
+ .hero h1{font-size:54px}
+ .stamp{width:92px;height:92px;font-size:12px;top:18px;right:18px}.stamp b{font-size:26px}
+ nav.scroll{padding:10px max(5vw,24px)}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .dishes{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .photos{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .sched li{grid-template-columns:90px minmax(0,1fr)}
+ .sched .t{font-size:22px}
+ .switch{display:inline-flex}
+ .switch button{flex:none;padding:8px 20px}
+ .planwrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;align-items:start}
+ .planwrap .mapimg{position:sticky;top:76px}
+}
+@media(min-width:1100px){.dishes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <img src="img/hero.jpg" alt="The Christmas market at Cologne Cathedral at night, with red-roofed stalls lit up below the cathedral">
+  <div class="stamp"><div><b>26</b>Nov<br>Thursday</div></div>
+  <div class="txt">
+    <h1>Cologne Christmas markets</h1>
+    <div class="sub">A day guide: crafts, Glühwein, a Ferris wheel at sunset</div>
+    <div class="facts"><span>Arrive 11:11</span><span>Train home 20:49</span><span>4 markets</span><span>About 55 to 85 euros plus shopping</span></div>
+  </div>
+</header>
+
+<nav class="scroll" aria-label="Sections">
+  <a href="#plan">Plan</a><a href="#markets">Markets</a><a href="#trails">Walking trails</a><a href="#eat">Eat</a><a href="#shop">Shop</a><a href="#rides">Rides</a><a href="#tips">Tips</a><a href="#know">Good to know</a>
+</nav>
+
+<section class="band" id="plan"><div class="wrap">
+  <h2>The plan</h2>
+  <p class="lede">The route runs in one direction, so there is no backtracking. Tap a walking time for directions, and tick off each stop as you go.</p>
+  <div class="note"><b>Is four markets too much?</b> It works, but the day is full. The cathedral market, the gnome market and the harbour are 10 to 20 minutes apart on foot. The tiring part is the late-afternoon trip from the harbour up to Neumarkt. The lighter day drops Neumarkt and gives the craft alley and the harbour more time.</div>
+  <div class="planwrap">
+    <div>
+      <div class="switch" role="group" aria-label="Choose a plan">
+        <button type="button" id="bFull" aria-pressed="true">Full day, 4 markets</button>
+        <button type="button" id="bLight" aria-pressed="false">Lighter day, 3 markets</button>
+      </div>
+      <ol class="sched" id="sched"></ol>
+    </div>
+    <div>
+      <img class="mapimg" src="img/map-plan.jpg" alt="Map of central Cologne with numbered pins: S the station, 1 the cathedral market, 2 Alter Markt and Heumarkt, 3 the harbour market, 4 Neumarkt" loading="lazy">
+      <p class="legend">S station · 1 cathedral · 2 gnome market (Alter Markt and Heumarkt) · 3 harbour · 4 Neumarkt (full day only)</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="band" id="markets" style="background:var(--tint)"><div class="wrap">
+  <h2>The markets, and where things are</h2>
+  <p class="lede">What to look for at each market, and where to find it once you are inside.</p>
+  <div class="grid">
+    <article class="card">
+      <img src="img/dom-canopy.jpg" alt="Strings of lights fanning out over the entrance sign of the cathedral Christmas market" loading="lazy">
+      <div class="in">
+        <h3>Cathedral market</h3>
+        <span class="hrs">Thu 11:00 to 22:00</span>
+        <p>Roncalliplatz, right outside the cathedral and the station. It is the busiest market in the city. You'll know you're there when you walk under the canopy of lights over the entrance sign.</p>
+        <div class="look">Where to find things</div>
+        <ul>
+          <li><b>The big Christmas tree</b> stands in the middle of the square. Use it as your meeting point.</li>
+          <li><b>Südtiroler Speckhütte</b>, the South Tyrolean ham stall, is next to the Romano-Germanic Museum.</li>
+          <li><b>The Wimmeltasse</b> is a mug sold only at this market. Look for it at the Glühwein stalls.</li>
+          <li><b>Cathedral waffles</b>, the Original Kölner Dom Waffel, are at Café Riese.</li>
+          <li>Also here: a large light tent and a stage with live music.</li>
+          <li>Bonus: the small <b>Adventsdorf</b> on Am Hof, one minute away, has a glowing pyramid, Reibekuchen and Kölsch.</li>
+        </ul>
+        <div class="btns"><a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Weihnachtsmarkt+am+K%C3%B6lner+Dom%2C+Roncalliplatz%2C+K%C3%B6ln">Open in Maps</a></div>
+      </div>
+    </article>
+    <article class="card">
+      <img src="img/heinzels-gate.jpg" alt="The Heinzels Wintermärchen entrance gate, with Old Town houses behind" loading="lazy">
+      <div class="in">
+        <h3>Heinzels Wintermärchen, the gnome market</h3>
+        <span class="hrs">Thu 11:00 to 22:00</span><span class="tag">Most traditional look</span>
+        <p>This market fills two Old Town squares, Alter Markt and Heumarkt. It covers the largest area of any market in Cologne, with more than 100 stalls in themed lanes. Alter Markt is surrounded by tall, gabled Old Town houses.</p>
+        <div class="look">Where to find things</div>
+        <ul>
+          <li><b>Crafts: go to Alter Markt.</b> This is where the artisans are, and some of them make their pieces at the stall. It is the best craft stop of the day.</li>
+          <li><b>For the storybook photo</b>, stand by the Jan von Werth fountain on Alter Markt, facing the gabled houses.</li>
+          <li><b>The ice rink is on Heumarkt.</b> It loops around the equestrian statue in the middle of the square.</li>
+          <li><b>Ice stock lanes</b> are beside the Allgäuer Büble Alpe hut.</li>
+          <li><b>Food and sweets</b> have their own lanes, the Futter- and Naschgasse.</li>
+          <li><b>Children's area:</b> a small Ferris wheel and a historic carousel. In past years there was also a Christmas post office selling Heinzel stamps.</li>
+        </ul>
+        <div class="btns"><a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Alter+Markt+K%C3%B6ln">Alter Markt</a><a class="btn alt" href="https://www.google.com/maps/search/?api=1&amp;query=Heumarkt+K%C3%B6ln">Heumarkt</a></div>
+      </div>
+    </article>
+    <article class="card">
+      <img src="img/harbour.jpg" alt="A lit-up stall at the harbour Christmas market" loading="lazy">
+      <div class="in">
+        <h3>Harbour market</h3>
+        <span class="hrs">Thu 11:00 to 21:00</span>
+        <p>By the Rhine at the Schokoladenmuseum. About 70 stalls sit under white pagoda tents, and the theme is maritime.</p>
+        <div class="look">Where to find things</div>
+        <ul>
+          <li><b>The Ferris wheel</b> is beside the Schokoladenmuseum. It is about 50 metres tall.</li>
+          <li><b>Winzerglühwein</b> (winemaker's mulled wine) is served at the big wooden three-masted ship.</li>
+          <li>The other Glühwein stands are built to look like ships. The market is also known for mulled beer.</li>
+          <li><b>Crafts:</b> this market is known for quality crafts, so it is your second craft stop.</li>
+          <li>Look out for the Rheinpiraten, a pirate act with jugglers and sailors' tales.</li>
+        </ul>
+        <div class="btns"><a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Hafen-Weihnachtsmarkt+Schokoladenmuseum+K%C3%B6ln">Open in Maps</a></div>
+      </div>
+    </article>
+    <article class="card">
+      <img src="img/engel-sign.jpg" alt="The illuminated Markt der Engel sign with two golden angels" loading="lazy">
+      <div class="in">
+        <h3>Markt der Engel (Market of Angels)</h3>
+        <span class="hrs">Thu 11:00 to 21:00</span><span class="tag">Full day only</span>
+        <p>Neumarkt, at the top of the main shopping streets. Look for this golden angel sign at the entrance.</p>
+        <div class="look">Where to find things</div>
+        <ul>
+          <li><b>Look up:</b> hundreds of white stars hang in the trees. This is the photo to take, after dark.</li>
+          <li><b>Angels:</b> performers dressed as angels walk through the market, and choirs sing on the stage.</li>
+          <li>Afterwards, Schildergasse and Hohe Straße lead you back to the cathedral.</li>
+        </ul>
+        <div class="btns"><a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Markt+der+Engel+Neumarkt+K%C3%B6ln">Open in Maps</a></div>
+      </div>
+    </article>
+  </div>
+  <div class="note g" style="margin-top:18px">Optional: the <b>Nikolausdorf</b> (St Nicholas Village) on Rudolfplatz is about 10 minutes' walk past Neumarkt. Its stalls are built like little half-timbered houses. Its 2026 hours are not confirmed. <a href="https://www.google.com/maps/search/?api=1&amp;query=Nikolausdorf+Rudolfplatz+K%C3%B6ln">Open in Maps</a></div>
+</div></section>
+
+<section class="band" id="trails"><div class="wrap">
+  <h2>Official walking trails</h2>
+  <p class="lede">These are Cologne Tourism's free Christmas trails, hosted here so you have them offline. Each one has the route map, walking directions you can follow in Google Maps, and the GPX file to copy into an app like Komoot.</p>
+  <div class="grid" id="trailList"></div>
+  <p class="where" style="margin-top:14px">Routes © KölnTourismus, CC BY-SA, from <a href="https://www.cologne-tourism.com/experiences-lifestyle/christmas/christmas-trails">cologne-tourism.com</a>. Maps © OpenStreetMap contributors. The Google Maps link follows the trail through about ten points along the way, so it is close to the official line but not exact.</p>
+</div></section>
+
+<section class="band" id="eat" style="background:var(--tint)"><div class="wrap">
+  <h2>Eat and drink</h2>
+  <p class="lede">Prices come from 2025 and 2026 news reports. Prices marked "estimate" are my own guess.</p>
+  <div class="dishes" id="dishes"></div>
+  <div class="note"><b>Mug deposit (Pfand).</b> Every hot drink comes in a mug with a deposit of about 3 to 3.50 euros. Hand the mug back to get the deposit refunded, or keep it as a souvenir. Each market has its own design.</div>
+</div></section>
+
+<section class="band red" id="shop"><div class="wrap">
+  <h2>What to shop for</h2>
+  <p class="lede">Crafts come first. Prices are my estimates for a typical stall.</p>
+  <div class="photos">
+    <figure><img src="img/stars-stall.jpg" alt="A stall hung with glowing paper star lanterns" loading="lazy"><figcaption>Star lanterns and ornaments</figcaption></figure>
+    <figure><img src="img/gingerbread.jpg" alt="Iced gingerbread hearts hanging at a market stall" loading="lazy"><figcaption>Gingerbread hearts</figcaption></figure>
+  </div>
+  <div class="rows" id="shopRows"></div>
+</div></section>
+
+<section class="band" id="rides"><div class="wrap">
+  <h2>Rides and things to do</h2>
+  <div class="grid">
+    <article class="card"><img src="img/wheel.jpg" alt="Ferris wheel beside the Chocolate Museum" loading="lazy"><div class="in"><h3>Ferris wheel at sunset</h3><p class="price">9 euros <span class="est">(2025 price)</span></p><p>About 50 metres high, and a ride takes about 12 minutes. Go at about 16:15 to see the sunset over the Rhine.</p><p class="where">Harbour market, beside the Schokoladenmuseum</p></div></article>
+    <article class="card"><img src="img/rink.jpg" alt="The Heumarkt ice rink lit up at night, seen from above" loading="lazy"><div class="in"><h3>Ice skating</h3><p class="price">9 euros on weekdays <span class="est">(2025 price; skate hire probably extra)</span></p><p>An outdoor rink, over 100 metres long, that loops around the statue on Heumarkt. Allow 30 minutes.</p><p class="where">Gnome market, Heumarkt</p></div></article>
+  </div>
+  <div class="rows">
+    <div class="row"><div class="top"><b>Ice stock sport (Bavarian curling)</b><span class="price">Book ahead</span></div><div class="where">Heumarkt. Teams book most of the lanes, so this is mainly fun to watch.</div></div>
+    <div class="row"><div class="top"><b>Weihnachtsmarkt-Express road train</b><span class="price">4 euros a stop <span class="est">(older price)</span></span></div><div class="where">Runs between the cathedral, Alter Markt and the harbour. Useful if your feet get tired. From Sunday to Thursday the last train leaves the cathedral at 18:30. Check it is running this year.</div></div>
+    <div class="row"><div class="top"><b>Live music, choirs and angels</b><span class="price">Free</span></div><div class="where">On the cathedral market stage and at Neumarkt</div></div>
+  </div>
+</div></section>
+
+<section class="band" id="tips" style="background:var(--gtint)"><div class="wrap">
+  <h2>Tips from Instagram</h2>
+  <div class="tips">
+    <div class="tip"><b>Use the official walking trail.</b> Cologne Tourism's free market-to-market trails come as GPX files for apps like Komoot. They are hosted above, under Walking trails. <div class="by">@kimberlykepharttravels</div></div>
+    <div class="tip"><b>The harbour has maritime touches.</b> It is known for mulled beer and nautical-themed stalls. <div class="by">@postcardsfrom.tina</div></div>
+    <div class="tip"><b>Save Neumarkt for after dark.</b> The white lights and angel performers look best at night. <div class="by">@postcardsfrom.tina</div></div>
+    <div class="tip"><b>Collect the mugs.</b> They change every year and differ by market. They are the souvenir people mention most. <div class="by">Several posts</div></div>
+  </div>
+</div></section>
+
+<section class="band" id="know"><div class="wrap">
+  <h2>Good to know</h2>
+  <div class="rows">
+    <div class="row"><div class="top"><b>Money</b></div><div class="where">Most stalls take cards. Bring 20 to 30 euros in cash for small stalls and mug deposits.</div></div>
+    <div class="row"><div class="top"><b>Entry</b><span class="price">Free</span></div><div class="where">All markets are free to enter.</div></div>
+    <div class="row"><div class="top"><b>Inside the cathedral</b><span class="price">12 euros</span></div><div class="where">A sightseeing ticket has been needed since 1 July 2026. Entry for worship is free.</div></div>
+    <div class="row"><div class="top"><b>Daylight</b></div><div class="where">Sunset is around 16:30, so the second half of the day is under the lights.</div></div>
+    <div class="row"><div class="top"><b>Shoes</b></div><div class="where">Wear shoes for cobblestones. The day covers several kilometres.</div></div>
+    <div class="row"><div class="top"><b>Hours</b></div><div class="where">From tourism and guide sites. Check <a href="https://www.koeln.de/weihnachten/weihnachtsmaerkte-koeln">koeln.de</a> on the morning of the trip.</div></div>
+  </div>
+</div></section>
+
+<footer class="band" style="border-top:1px solid var(--line)"><div class="wrap">
+  <b>Credits.</b> Maps © OpenStreetMap contributors. Trail routes © KölnTourismus, CC BY-SA. Photos from Wikimedia Commons, cropped and resized:
+  <ul id="credits"></ul>
+</div></footer>
+
+<script>
+{
+const M='https://www.google.com/maps/search/?api=1&query=';
+const D=(o,d,m)=>'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(o)+'&destination='+encodeURIComponent(d)+'&travelmode='+(m||'walking');
+const DOM='Weihnachtsmarkt am Kölner Dom, Roncalliplatz, Köln',HBF='Köln Hbf',ALT='Alter Markt, Köln',HEU='Heumarkt, Köln',HAF='Hafen-Weihnachtsmarkt Schokoladenmuseum, Köln',NEU='Markt der Engel, Neumarkt, Köln';
+const full=[
+ {t:'11:11',h:'Arrive at Köln Hbf',p:'Leave a bag in the station lockers if you have one.',m:M+encodeURIComponent(HBF)},
+ {t:'11:15',mv:1,h:'Walk to the cathedral market',d:'3 min',u:D(HBF,DOM)},
+ {t:'11:20',e:'12:30',h:'1 · Cathedral market',p:'It is quietest at this time of day. Have Reibekuchen, buy the Wimmeltasse, and browse the crafts.',m:M+encodeURIComponent(DOM)},
+ {t:'12:30',mv:1,h:'Walk to Alter Markt',d:'10 min',u:D(DOM,ALT)},
+ {t:'12:40',e:'14:30',h:'2 · Gnome market',p:'Start in the craft alley on Alter Markt. Have lunch on Heumarkt by the rink, and skate for 30 minutes if you like.',m:M+encodeURIComponent(ALT)},
+ {t:'14:30',mv:1,h:'Walk along the Rhine to the harbour',d:'20 min',u:D(HEU,HAF)},
+ {t:'14:50',e:'16:45',h:'3 · Harbour market',p:'Browse the crafts and have a Winzerglühwein at the three-masted ship. Ride the Ferris wheel at about 16:15 for sunset.',m:M+encodeURIComponent(HAF)},
+ {t:'16:45',mv:1,h:'Tram or walk to Neumarkt',d:'25 min',u:D(HAF,NEU,'transit')},
+ {t:'17:15',e:'18:30',h:'4 · Markt der Engel',p:'Now that it is dark, see the star lights and the angel performers.',m:M+encodeURIComponent(NEU)},
+ {t:'18:30',mv:1,h:'Walk back via Schildergasse and Hohe Straße',d:'20 min',u:D(NEU,DOM)},
+ {t:'19:00',e:'20:10',h:'1 · Cathedral market by night',p:'Have dinner and a last Glühwein. Return the mugs you are not keeping.',m:M+encodeURIComponent(DOM)},
+ {t:'20:15',mv:1,h:'Walk to Köln Hbf',d:'3 min',u:D(DOM,HBF)},
+ {t:'20:49',h:'Train home',p:'Be on the platform by 20:30. You arrive at Amsterdam Centraal at 23:29.'}
+];
+const light=[
+ full[0],full[1],
+ {t:'11:20',e:'12:45',h:'1 · Cathedral market',p:full[2].p,m:full[2].m},
+ {t:'12:45',mv:1,h:'Walk to Alter Markt',d:'10 min',u:D(DOM,ALT)},
+ {t:'13:00',e:'15:00',h:'2 · Gnome market',p:'Take your time in the craft alley on Alter Markt, then have lunch and skate on Heumarkt.',m:M+encodeURIComponent(ALT)},
+ {t:'15:00',mv:1,h:'Walk along the Rhine to the harbour',d:'20 min',u:D(HEU,HAF)},
+ {t:'15:20',e:'17:30',h:'3 · Harbour market',p:'Browse the crafts, have a Winzerglühwein at the ship, and ride the Ferris wheel at about 16:15 for sunset. Stay as the lights come up.',m:M+encodeURIComponent(HAF)},
+ {t:'17:30',mv:1,h:'Walk back along the Rhine',d:'about 30 min',u:D(HAF,DOM)},
+ {t:'18:00',e:'20:10',h:'1 · Cathedral market by night',p:'Have a relaxed dinner here or in the Old Town. Return the mugs you are not keeping.',m:M+encodeURIComponent(DOM)},
+ full[11],full[12]
+];
+const store={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let ticks=store.get('cgn-ticks')||{};
+const sched=document.getElementById('sched');
+function render(list,key){
+ sched.innerHTML=list.map(s=>{const id=key+'-'+s.t+'-'+s.h;const on=ticks[id]?' ticked':'';
+  if(s.mv) return `<li class="move${on}"><div class="t">${s.t}</div><div><h3>${s.h}</h3><a href="${s.u}">${s.d}, directions</a></div></li>`;
+  return `<li class="${on.trim()}"><div class="t">${s.t}${s.e?`<small>to ${s.e}</small>`:''}</div><div><h3>${s.h}</h3>${s.p?`<p>${s.p}</p>`:''}${s.m?`<div class="btns"><a class="btn alt" href="${s.m}">Open in Maps</a></div>`:''}<label class="done"><input type="checkbox" data-id="${id}"${on?' checked':''}> Done</label></div></li>`}).join('');
+}
+const bF=document.getElementById('bFull'),bL=document.getElementById('bLight');
+function setPlan(p){bF.setAttribute('aria-pressed',p==='full');bL.setAttribute('aria-pressed',p==='light');render(p==='full'?full:light,p);store.set('cgn-plan',p)}
+bF.addEventListener('click',()=>setPlan('full'));bL.addEventListener('click',()=>setPlan('light'));
+sched.addEventListener('change',e=>{const c=e.target;if(!c.dataset.id)return;ticks[c.dataset.id]=c.checked;store.set('cgn-ticks',ticks);c.closest('li').classList.toggle('ticked',c.checked)});
+setPlan(store.get('cgn-plan')||'full');
+
+/* trails */
+const ROUTES={"festive":[[50.94132,6.9564],[50.9413,6.95649],[50.94129,6.95677],[50.94087,6.95677],[50.94088,6.95753],[50.94084,6.95812],[50.94084,6.95822],[50.9403,6.95819],[50.9403,6.95819],[50.94005,6.95819],[50.93994,6.95819],[50.93986,6.95968],[50.93982,6.95995],[50.93919,6.95985],[50.93874,6.96018],[50.9384,6.96022],[50.9384,6.96022],[50.938,6.96026],[50.93746,6.96028],[50.93742,6.96028],[50.93742,6.96091],[50.9366,6.96095],[50.93659,6.96092],[50.93645,6.96067],[50.93645,6.96067],[50.93625,6.96035],[50.93625,6.9603],[50.93624,6.95955],[50.9362,6.9581],[50.9362,6.9581],[50.9362,6.9581],[50.93628,6.95804],[50.93626,6.95693],[50.93636,6.95627],[50.93647,6.95539],[50.93648,6.95536],[50.93651,6.95527],[50.93648,6.9537],[50.93643,6.95274],[50.93642,6.95245],[50.93642,6.95225],[50.93647,6.95166],[50.93649,6.95129],[50.9365,6.95093],[50.9365,6.95033],[50.93647,6.9493],[50.93636,6.9493],[50.93635,6.94902],[50.93633,6.94897],[50.93626,6.94892],[50.93616,6.94882],[50.93606,6.94862],[50.93594,6.94807],[50.93593,6.94808],[50.93593,6.94808],[50.93626,6.94765],[50.93647,6.94768],[50.93657,6.94638],[50.93653,6.94631],[50.93648,6.94622],[50.93651,6.94614],[50.93654,6.94604],[50.93653,6.94597],[50.93655,6.9458],[50.93668,6.94559],[50.93685,6.94527],[50.93683,6.94524],[50.93686,6.9452],[50.93686,6.9452],[50.93695,6.94508],[50.93695,6.945],[50.93689,6.945],[50.93693,6.94432],[50.93686,6.94432],[50.93688,6.94397],[50.93691,6.94325],[50.93691,6.94291],[50.93691,6.94231],[50.93686,6.94231],[50.93683,6.94105],[50.93677,6.94044],[50.93678,6.94037],[50.93657,6.93948],[50.93654,6.93948],[50.93654,6.93948],[50.93668,6.93949],[50.93675,6.93923],[50.93675,6.93915],[50.93678,6.93924],[50.93723,6.93936],[50.93812,6.93958],[50.93889,6.93978],[50.93889,6.93969],[50.93889,6.93969],[50.93893,6.93935],[50.93885,6.93934],[50.93888,6.93911],[50.93912,6.93896],[50.9406,6.93813]],"noel":[[50.93625,6.96032],[50.93625,6.9603],[50.93624,6.95955],[50.9362,6.9581],[50.93628,6.95804],[50.93626,6.95693],[50.93636,6.95627],[50.93636,6.95626],[50.93636,6.95626],[50.93643,6.95628],[50.93655,6.95629],[50.93683,6.95631],[50.93707,6.95626],[50.93748,6.95622],[50.93777,6.95623],[50.93777,6.95623],[50.93777,6.95623],[50.93778,6.95612],[50.93797,6.95502],[50.93802,6.95496],[50.93813,6.9548],[50.93816,6.95469],[50.93826,6.95419],[50.93829,6.95383],[50.93837,6.95344],[50.93833,6.95343],[50.93827,6.95292],[50.93825,6.95287],[50.93834,6.95258],[50.93834,6.95247],[50.93834,6.95247],[50.93834,6.95247],[50.93834,6.95247],[50.93906,6.95241],[50.93906,6.9524],[50.93906,6.9524],[50.93907,6.95245],[50.93902,6.95312],[50.93902,6.9532],[50.93899,6.95358],[50.93905,6.95359],[50.93903,6.95375],[50.93907,6.95391],[50.93914,6.95408],[50.93914,6.95408],[50.93917,6.95422],[50.93918,6.95438],[50.93917,6.95468],[50.93917,6.95506],[50.93913,6.95521],[50.93929,6.95534],[50.93956,6.95546],[50.94013,6.95552],[50.94021,6.95547],[50.94021,6.95547],[50.94023,6.95544],[50.94029,6.956],[50.94059,6.95602],[50.94058,6.95609],[50.94112,6.95615],[50.94134,6.95627],[50.94134,6.95629],[50.94134,6.95629],[50.9413,6.95649],[50.94129,6.95677],[50.94087,6.95677],[50.94088,6.95753],[50.94087,6.95766],[50.94087,6.95766],[50.94084,6.95812],[50.94084,6.95822],[50.94087,6.9585],[50.9409,6.95852],[50.94091,6.95935],[50.94101,6.9594],[50.94113,6.95951],[50.94113,6.95981],[50.94115,6.96114],[50.94115,6.96115],[50.94115,6.96115],[50.94089,6.96129],[50.94089,6.96177],[50.94089,6.96182],[50.94082,6.9619],[50.94054,6.96242],[50.94036,6.96286],[50.94036,6.96286],[50.94036,6.96286],[50.93964,6.96287],[50.93932,6.96296],[50.93936,6.96197],[50.93923,6.96201],[50.9392,6.96063],[50.93918,6.96025],[50.93918,6.96025],[50.93919,6.95985],[50.93874,6.96018],[50.938,6.96026],[50.9375,6.96028],[50.9375,6.96028],[50.93746,6.96028],[50.93742,6.96028],[50.93742,6.96091],[50.93746,6.96108],[50.93751,6.96108],[50.93754,6.96111],[50.93757,6.96122],[50.93764,6.96177],[50.93767,6.96229],[50.93767,6.96235],[50.93772,6.96286],[50.93774,6.96306],[50.93775,6.96324],[50.93771,6.96324],[50.93771,6.96324],[50.9376,6.96325],[50.93678,6.96337],[50.93645,6.96341],[50.93536,6.96345],[50.93443,6.96351],[50.9339,6.96353],[50.93338,6.9635],[50.93271,6.96338],[50.93256,6.96332],[50.93247,6.96319],[50.93238,6.96329],[50.93219,6.96386],[50.93212,6.96392],[50.93212,6.96392],[50.93219,6.96386],[50.93238,6.96329],[50.93247,6.96319],[50.93256,6.96306],[50.9326,6.9628],[50.93283,6.96287],[50.93285,6.96237],[50.93319,6.9624],[50.93378,6.96255],[50.93375,6.96177],[50.93376,6.96177],[50.93376,6.96177],[50.93428,6.96175],[50.93428,6.96158],[50.93424,6.96086],[50.93426,6.96086],[50.93426,6.96086],[50.93485,6.96082]],"tinsel":[[50.93585,6.93917],[50.93615,6.93911],[50.93625,6.9391],[50.93626,6.93876],[50.93642,6.93876],[50.93645,6.93795],[50.93647,6.93782],[50.93649,6.93747],[50.93669,6.93747],[50.93669,6.93748],[50.93669,6.93748],[50.93669,6.93747],[50.93746,6.93735],[50.93835,6.93752],[50.93835,6.93753],[50.93835,6.93753],[50.93846,6.93509],[50.93847,6.93508],[50.93847,6.93508],[50.93875,6.93471],[50.93879,6.93468],[50.93888,6.93467],[50.94019,6.93472],[50.94019,6.93472],[50.94018,6.93472],[50.94018,6.93486],[50.94026,6.93598],[50.9404,6.93773],[50.94039,6.93781],[50.94038,6.93783],[50.94035,6.93783],[50.94037,6.93791],[50.9404,6.93825],[50.94063,6.93812],[50.94071,6.93816],[50.94073,6.93819],[50.94073,6.93819],[50.94075,6.93823],[50.94079,6.93802],[50.94094,6.93794],[50.94107,6.93792],[50.94192,6.93784],[50.94213,6.93782],[50.94235,6.9378],[50.94237,6.93794],[50.94242,6.93812],[50.94324,6.93895],[50.94331,6.93906],[50.94338,6.93919],[50.94349,6.93922],[50.94364,6.93936],[50.94434,6.94007],[50.94471,6.93915],[50.94475,6.93906],[50.94481,6.93915],[50.94512,6.93965],[50.94546,6.9402],[50.9462,6.94135],[50.94641,6.94166],[50.94642,6.94159],[50.94658,6.94158],[50.94655,6.94202],[50.94653,6.94246],[50.94654,6.94267],[50.94657,6.94289],[50.94755,6.94302],[50.94761,6.94303],[50.94757,6.9442],[50.94762,6.94431],[50.94762,6.94431],[50.94762,6.94433],[50.9477,6.9443],[50.94788,6.94392],[50.94793,6.9439],[50.94798,6.94389],[50.94803,6.9439],[50.94808,6.94392],[50.94815,6.94399],[50.94889,6.94257],[50.94895,6.94244],[50.94879,6.9418],[50.94864,6.94141],[50.94858,6.94096],[50.94853,6.94067],[50.94841,6.94039],[50.94822,6.94],[50.94809,6.93979],[50.94801,6.93963],[50.948,6.93964],[50.94801,6.93963],[50.94779,6.93911],[50.94773,6.939],[50.94747,6.9387],[50.94739,6.93855],[50.94732,6.93839],[50.94718,6.93797],[50.94715,6.93788],[50.94711,6.93783],[50.94699,6.93758],[50.94676,6.93723],[50.94671,6.93717],[50.94666,6.93729],[50.94661,6.93749],[50.94659,6.93754],[50.94666,6.93762],[50.94706,6.93668],[50.94705,6.93638],[50.94708,6.93627],[50.94779,6.93444],[50.94792,6.93414],[50.94835,6.93305],[50.94839,6.93293],[50.94839,6.93285],[50.94846,6.93283],[50.94863,6.93245],[50.94862,6.93236],[50.94891,6.93165],[50.94934,6.93053],[50.94887,6.93001],[50.94883,6.93002],[50.94881,6.92997],[50.94852,6.92961],[50.94772,6.92864],[50.94787,6.92826],[50.94792,6.92811],[50.94795,6.92807],[50.94819,6.92712],[50.94867,6.92511],[50.94869,6.92501],[50.94865,6.92495],[50.94844,6.92469],[50.94807,6.92422],[50.94845,6.9231],[50.9475,6.92228],[50.94784,6.92145],[50.94787,6.92148],[50.94787,6.92148],[50.94863,6.92213],[50.94965,6.92304],[50.94972,6.92313],[50.94971,6.92313],[50.94971,6.92313],[50.94977,6.92307],[50.95012,6.92246],[50.95035,6.922],[50.95066,6.92116],[50.95071,6.92108],[50.95074,6.92102],[50.95103,6.92022],[50.95109,6.92009],[50.95123,6.91971],[50.95128,6.91958],[50.95137,6.91933],[50.9515,6.919],[50.95159,6.91908],[50.95161,6.91908],[50.952,6.91895],[50.95206,6.91894],[50.95211,6.91901],[50.95226,6.91869],[50.95215,6.91862],[50.95212,6.91855],[50.95205,6.91834],[50.95205,6.91834],[50.95179,6.91577],[50.9519,6.9168],[50.95205,6.91831]],"heide":[[50.94146,6.95641],[50.94147,6.95641],[50.94148,6.95642],[50.94157,6.9564],[50.94157,6.95639],[50.94178,6.95635],[50.94176,6.95612],[50.9418,6.95611],[50.94181,6.95625],[50.94171,6.95625],[50.94172,6.9563],[50.94163,6.9563],[50.94142,6.95629],[50.94134,6.95627],[50.94134,6.95631],[50.9413,6.95649],[50.94129,6.95677],[50.94087,6.95677],[50.94088,6.95753],[50.94084,6.95812],[50.94084,6.95822],[50.9403,6.95819],[50.9403,6.95819],[50.94005,6.95819],[50.93994,6.95819],[50.93986,6.95968],[50.93982,6.95995],[50.93919,6.95985],[50.93874,6.96018],[50.93851,6.9602],[50.93851,6.9602],[50.938,6.96026],[50.93746,6.96028],[50.93742,6.96028],[50.93742,6.96091],[50.93666,6.96095],[50.93666,6.96095],[50.9366,6.96095],[50.9366,6.96098],[50.93669,6.96113],[50.93672,6.96187],[50.93666,6.96198],[50.93671,6.96225],[50.93675,6.96285],[50.93678,6.96337],[50.93678,6.96337],[50.93678,6.96337],[50.93645,6.96341],[50.93536,6.96345],[50.93443,6.96351],[50.9339,6.96353],[50.93338,6.9635],[50.93271,6.96338],[50.93256,6.96332],[50.93247,6.96319],[50.93238,6.96329],[50.93219,6.96386],[50.93213,6.96392],[50.93205,6.96393],[50.93201,6.96393],[50.93201,6.96393],[50.93196,6.96392],[50.93187,6.96393],[50.9318,6.96398],[50.93154,6.96428],[50.93033,6.96469],[50.9304,6.96521],[50.92876,6.96584],[50.92819,6.96603],[50.9275,6.96629],[50.9263,6.96676],[50.9259,6.96693],[50.92584,6.96695],[50.92584,6.96695],[50.92546,6.9671],[50.92533,6.9662],[50.92525,6.96574],[50.92524,6.96568],[50.92531,6.96559],[50.92518,6.96523],[50.92493,6.96394],[50.92462,6.96251],[50.92461,6.96251],[50.92461,6.96251],[50.92462,6.96251],[50.9246,6.96238],[50.9245,6.96142],[50.92444,6.9599],[50.92454,6.95949],[50.92451,6.95941],[50.9245,6.9586],[50.92448,6.95861],[50.92448,6.95861],[50.92345,6.95885],[50.92315,6.959],[50.92291,6.95908],[50.92227,6.95924],[50.9221,6.95927],[50.92208,6.95926],[50.92207,6.95932],[50.9219,6.95938],[50.92137,6.95953],[50.92137,6.95952]]};
+const trails=[
+ {k:'noel',n:"L'eau de Noël",fit:'Closest to your lighter day',km:'3.8 km',time:'about 1 h',shape:'Loop from Heumarkt',d:'Links the gnome market, the cathedral market and the harbour. It passes the Farina perfume house and 4711 on Glockengasse, the place to buy Eau de Cologne, then returns along the Rhine.',stops:'1 Heumarkt · 2 Cathedral · 3 Harbour',url:'https://www.cologne-tourism.com/tours/detail/l-eau-de-noel'},
+ {k:'festive',n:'Festive walk from market to market',fit:'Closest to your full day',km:'3 km',time:'about 45 min',shape:'One way, cathedral to Friesenplatz',d:'Runs from the cathedral through the Old Town markets, along Schildergasse to Neumarkt, then to the Nikolausdorf and the Heavenue market on Friesenplatz. It skips the harbour, which you add from Heumarkt.',stops:'1 Cathedral · 2 Alter Markt · 3 Neumarkt · 4 Rudolfplatz · 5 Friesenplatz',url:'https://www.cologne-tourism.com/tours/detail/festive-walk-from-market-to-market'},
+ {k:'heide',n:"Heidewitzka, it's Advent",fit:'Southbound, more local',km:'3.5 km',time:'about 50 min',shape:'One way, cathedral to Volksgarten',d:'Goes from the cathedral through the Old Town and along the Rhine to the harbour, past the Crane Houses and up Severinstraße, to the smallest Christmas market in the city in the Volksgarten.',stops:'1 Cathedral · 2 Heumarkt · 3 Harbour · 4 Volksgarten',url:'https://www.cologne-tourism.com/tours/detail/heidewitzka-its-advent'},
+ {k:'tinsel',n:"There's more tinsel in the west",fit:'Alternative markets and boutiques',km:'5.3 km',time:'about 1 h 15',shape:'One way, Rudolfplatz to Ehrenfeld',d:'Goes from the Nikolausdorf through the boutiques of the Belgian Quarter, past Heavenue to Santa’s market in the MediaPark, which has a 50-metre “Santa in the Sky” ride, and ends at the Ehrenfeld markets by the station. It is a different day from yours, but good for a second trip.',stops:'1 Rudolfplatz · 2 Friesenplatz · 3 MediaPark · 4 Ehrenfeld',url:'https://www.cologne-tourism.com/tours/detail/theres-more-tinsel-in-the-west'}
+];
+function gmaps(pts,loop){
+ const n=pts.length,pick=i=>pts[Math.min(n-1,Math.round(i))].join(',');
+ const wp=[];for(let i=1;i<=8;i++)wp.push(pick(i*(n-1)/9));
+ return 'https://www.google.com/maps/dir/?api=1&travelmode=walking&origin='+pick(0)+'&destination='+pick(n-1)+'&waypoints='+encodeURIComponent(wp.join('|'));
+}
+function gpx(k,name){return '<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="KölnTourismus (CC BY-SA)" xmlns="http://www.topografix.com/GPX/1/1">\n<trk><name>'+name.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</name><trkseg>\n'+ROUTES[k].map(([a,b])=>`<trkpt lat="${a}" lon="${b}"/>`).join('\n')+'\n</trkseg></trk>\n</gpx>\n'}
+const list=document.getElementById('trailList');
+list.innerHTML=trails.map(t=>`<article class="trail"><img src="img/map-${t.k}.jpg" alt="Map of the ${t.n} trail" loading="lazy"><div class="in"><span class="fit">${t.fit}</span><h3>${t.n}</h3><div class="stats"><span>${t.km}</span><span>${t.time}</span><span>${t.shape}</span></div><p>${t.d}</p><p class="where">${t.stops}</p><div class="btns"><a class="btn" href="${gmaps(ROUTES[t.k])}">Walk it in Google Maps</a><button class="btn alt" type="button" data-copy="${t.k}">Copy GPX</button><a class="btn alt" href="gpx/${t.k}.gpx.xml">GPX file</a><a class="btn alt" href="${t.url}">Official page</a></div><div class="toast" aria-live="polite"></div></div></article>`).join('');
+list.addEventListener('click',async e=>{const b=e.target.closest('[data-copy]');if(!b)return;const t=trails.find(x=>x.k===b.dataset.copy);const out=b.closest('.in').querySelector('.toast');
+ try{await navigator.clipboard.writeText(gpx(t.k,t.n));out.textContent='GPX copied. Paste it into a new .gpx file or a route app.'}catch(err){out.textContent='Copy was blocked here. Use the GPX file button instead.'}});
+
+/* food */
+const dishes=[
+ ['reibekuchen','Reibekuchen','The Cologne classic: crispy potato pancakes with applesauce.','From about 7.50 euros','Cathedral market, and the Adventsdorf on Am Hof'],
+ ['bratwurst','Bratwurst','Grilled sausage in a roll. The cathedral market sells an organic one.','About 6 euros','Every market'],
+ ['langos','Langos','Hungarian fried flatbread with sour cream and cheese.','From about 6.50 euros','Cathedral market'],
+ ['flammlachs','Flammlachs','Salmon cooked on planks around an open fire, served in a roll.','About 9 euros','Harbour market'],
+ ['spaetzle','Käsespätzle','Egg noodles with melted cheese and fried onions.','About 8 euros','Harbour market'],
+ ['mandeln','Roasted almonds','Warm, sugar-coated almonds. Follow the smell.','From about 4 euros','Every market'],
+ [null,'Glühwein','Mulled wine, plus a mug deposit.','About 5 euros','Every market. Winzerglühwein is at the harbour ship.'],
+ [null,'Feuerzangenbowle','Mulled wine with a rum-soaked sugar cone set alight over the mug.','About 6.50 euros','Harbour market'],
+ [null,'Cathedral waffle','A waffle in the shape of the cathedral.','4 to 6 euros (estimate)','Cathedral market, Café Riese'],
+ [null,'Chestnuts and hot chocolate','Six roasted chestnuts, or a non-alcoholic warm drink.','About 3 euros / from 4 euros','Most markets'],
+ [null,'Himmel un Ääd and Kölsch','A Rhenish dinner of blood sausage with potato and apple, and the local beer.','15 to 20 euros (estimate)','A brewhouse in the Old Town']
+];
+document.getElementById('dishes').innerHTML=dishes.map(([img,n,d,p,w])=>`<div class="dish${img?'':' noimg'}">${img?`<img src="img/${img}.jpg" alt="${n}" loading="lazy">`:''}<div class="in"><h3>${n}</h3><p>${d}</p><div class="price">${p}</div><div class="where">${w}</div></div></div>`).join('');
+
+/* shop */
+const shop=[
+ ['Handmade crafts: wooden decorations, ceramics, textiles, jewellery','10 to 50 euros','Craft alley on Alter Markt first, then the harbour market'],
+ ['Market mugs','Keep it: 3 to 3.50 euros','Every market. The Wimmeltasse is only at the cathedral market.'],
+ ['Star lanterns and glass ornaments','5 to 25 euros each','Cathedral market'],
+ ['Gingerbread hearts','5 to 12 euros','Sweet stalls at every market'],
+ ['Painted plates and ceramics','15 to 40 euros','Cathedral market and Alter Markt'],
+ ['Cologne treats: Kölsche Spekulatius, Domlikör, Printen','5 to 15 euros a pack','Cathedral market'],
+ ['Artisan chocolate','5 to 15 euros','Harbour market, next to the Schokoladenmuseum'],
+ ['Eau de Cologne','10 to 30 euros for a small bottle','Farina House or 4711 on Glockengasse, on the L’eau de Noël trail']
+];
+document.getElementById('shopRows').innerHTML=shop.map(([n,p,w])=>`<div class="row"><div class="top"><b>${n}</b><span class="price">${p}</span></div><div class="where">${w}</div></div>`).join('');
+
+/* credits */
+const cr=[
+ ['Cathedral market at night, light canopy, Markt der Engel sign, star stall','CGP Grey','CC BY 2.0',['Cologne_Christmas_Market_4890067811.jpg','DE-NW_-_Cologne_-_Christmas_-_Holiday_-_Christmas_Market_(4890666246).jpg','DE-NW_-_Cologne_-_Christmas_-_Holiday_-_Christmas_Market_(4890056427).jpg','DE-NW_-_Cologne_-_Christmas_-_Holiday_-_Christmas_Market_(4890660282).jpg']],
+ ['Heinzels Wintermärchen gate','Corradox','CC BY-SA 4.0',['Heinzels_Wintermärchen.jpg']],
+ ['Harbour market stall','Jorge Franganillo','CC BY 2.0',['Kölner_Hafen-Weihnachtsmarkt_(52615674618).jpg']],
+ ['Heumarkt ice rink','Superbass','CC BY-SA 4.0',['2025-12-22-Heumarkt-060839.jpg']],
+ ['Ferris wheel','Raimond Spekking','CC BY-SA 4.0',['Riesenrad_Schokoladenmuseum,_Rheinauhafen_Köln-8878.jpg']],
+ ['Gingerbread hearts','Kora27','CC BY-SA 4.0',['Lebkuchenherzen_in_Deutschland_2H1A2067WI.jpg']],
+ ['Reibekuchen','Martin van Baal','CC BY-SA 4.0',['Reibekuchen_mit_Apfelmus.jpg']],
+ ['Bratwurst','Rainer Halama','CC BY-SA 4.0',['Bratwurst-WUS09435.jpg']],
+ ['Langos','MichalPL','CC BY-SA 4.0',['Hungarian_Lángos.jpg']],
+ ['Flammlachs','HerrSchilling','CC BY-SA 4.0',['Flammlachs_Feuerschale.jpg']],
+ ['Käsespätzle','4028mdk09','CC BY-SA 3.0',['Käsespätzle_mit_Zwiebeln_und_Beilagensalat.JPG']],
+ ['Roasted almonds','Mattes','Public domain',['Gebrannte_Mandeln.JPG']]
+];
+document.getElementById('credits').innerHTML=cr.map(([w,a,l,fs])=>`<li>${w}: ${a}, ${l} (${fs.map((f,i)=>`<a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(f)}">source${fs.length>1?' '+(i+1):''}</a>`).join(', ')})</li>`).join('');
+}
+</script>
+</body>
+</html>
